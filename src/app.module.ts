@@ -5,16 +5,23 @@ import {AppService} from './app.service';
 import {AuthModule} from './core/auth/auth.module';
 import {StripeModule} from "./stripe/stripe.module";
 import {UserModule} from "./user/user.module";
+import {APP_FILTER} from "@nestjs/core";
+import {HttpExceptionFilter} from "./core/http-exception.filter";
+import {HttpModule} from "@nestjs/axios";
 
 @Module({
     imports: [
         ConfigModule.forRoot({isGlobal: true}),
+        HttpModule,
         StripeModule,
         AuthModule,
-        UserModule
+        UserModule,
     ],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [AppService, {
+        provide: APP_FILTER,
+        useClass: HttpExceptionFilter
+    }],
 })
 export class AppModule {
 }
