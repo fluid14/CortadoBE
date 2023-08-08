@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { StripeService } from './stripe.service';
 import { Response } from 'express';
-import { CreateActionDto } from './dto/createAction.dto';
 import { ApiKeyAuthGuard } from '../core/auth/guard/apiKeyAuth.guard';
 
 @UseGuards(ApiKeyAuthGuard)

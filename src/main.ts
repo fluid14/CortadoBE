@@ -2,6 +2,7 @@ import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
 import {InternalServerErrorException, ValidationPipe} from '@nestjs/common';
 import {HttpService} from "@nestjs/axios";
+import {HttpExceptionFilter} from "./core/http-exception.filter";
 
 async function bootstrap() {
     const httpService = new HttpService();
@@ -9,12 +10,13 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe({whitelist: true}));
     app.enableCors();
 
+    app.useGlobalFilters(new HttpExceptionFilter());
+
     httpService.axiosRef.interceptors.response.use(
         (response) => {
             return response;
         },
         (error) => {
-            console.error('Internal server error exception', error);
             throw new InternalServerErrorException();
         },
     );

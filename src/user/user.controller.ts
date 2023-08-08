@@ -1,21 +1,51 @@
 import {
-  Body,
-  Controller, Get, Post, Res,
-  UseGuards,
+    Body,
+    Controller, Get, Param, Post, Put, Res,
+    UseGuards,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { ApiKeyAuthGuard } from '../core/auth/guard/apiKeyAuth.guard';
+import {UserService} from './user.service';
+import {ApiKeyAuthGuard} from '../core/auth/guard/apiKeyAuth.guard';
 import {Response} from "express";
-import {tap} from "rxjs";
+import {catchError, tap} from "rxjs";
+import catchAxiosError from "../core/helpers/catchAxiosError";
+import {LoginDto} from "./models/login.dto";
+import throwAxiosData from "../core/helpers/throwAxiosData";
+import {RegisterDto} from "./models/register.dto";
 
 @UseGuards(ApiKeyAuthGuard)
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {
-  }
+    constructor(private userService: UserService) {
+    }
 
-  @Get('/login')
-  async createAction(@Res() res: Response) {
-    this.userService.loginUser(null).pipe(tap(response => res.send({ result: response })));
-  }
+    @Post('/login')
+    login(@Body() body: LoginDto, @Res() res: Response) {
+        this.userService.login(body)
+            .pipe(
+                tap((data) => throwAxiosData(data, res)),
+                catchError(err => catchAxiosError(err, res))
+            )
+            .subscribe();
+    }
+
+    @Post('/register')
+    register(@Body() body: RegisterDto, @Res() res: Response) {
+        this.userService.register(body)
+            .pipe(
+                tap((data) => throwAxiosData(data, res)),
+                catchError(err => catchAxiosError(err, res))
+            )
+            .subscribe();
+    }
+
+    @Put('/:id')
+    update(@Body() body: any, @Param('id') id: string, @Res() res: Response) {
+        this.userService.update(id, body)
+            .pipe(
+                tap((data) => throwAxiosData(data, res)),
+                catchError(err => catchAxiosError(err, res))
+            )
+            .subscribe();
+    }
 }
+

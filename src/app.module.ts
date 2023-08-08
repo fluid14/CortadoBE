@@ -8,11 +8,13 @@ import {UserModule} from "./user/user.module";
 import {APP_FILTER} from "@nestjs/core";
 import {HttpExceptionFilter} from "./core/http-exception.filter";
 import {HttpModule} from "@nestjs/axios";
+import {StrapiApiModule} from "./core/api/strapi-api/strapi-api.module";
 
 @Module({
     imports: [
         ConfigModule.forRoot({isGlobal: true}),
         HttpModule,
+        StrapiApiModule,
         StripeModule,
         AuthModule,
         UserModule,

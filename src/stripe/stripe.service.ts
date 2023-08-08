@@ -16,8 +16,6 @@ export class StripeService {
     }
 
     createSession = async (body) => {
-        console.log(body);
-
         return await this.stripe.checkout.sessions.create({
             success_url: `${this.configService.get<string>('FRONTEND_URL')}/sukces`,
             cancel_url: `${this.configService.get<string>('FRONTEND_URL')}/anulowano`,
@@ -26,6 +24,13 @@ export class StripeService {
             ],
             mode: 'payment',
             customer: 'cus_OPLrgVqWakf5Zd'
+        })
+    };
+
+    createCustomer = async (body) => {
+        return await this.stripe.customers.create({
+            name: `${body.name} ${body.surname}`,
+            email: body.email,
         })
     };
 }
