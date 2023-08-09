@@ -28,9 +28,6 @@ export class StripeService {
         checkoutPayload.success_url = `${this.configService.get<string>('FRONTEND_URL')}/${success_url}`
         checkoutPayload.cancel_url = `${this.configService.get<string>('FRONTEND_URL')}/${cancel_url}`
 
-        // if (isVat) checkoutPayload.invoice_creation = {};
-
-        console.log(checkoutPayload);
         return await this.stripe.checkout.sessions.create(checkoutPayload)
     };
 
