@@ -1,6 +1,6 @@
 import {
   Body,
-  Controller,
+  Controller, Get,
   Post,
   Res,
   UseGuards,
@@ -14,10 +14,15 @@ import { ApiKeyAuthGuard } from '../core/auth/guard/apiKeyAuth.guard';
 export class StripeController {
   constructor(private stripeService: StripeService) {}
 
-
   @Post('/create-session')
   async createAction(@Body() body: any, @Res() res: Response) {
     const result = await this.stripeService.createSession(body);
+    res.send({ result });
+  }
+
+  @Get('/shipping-methods')
+  async getShippingMethods(@Res() res: Response) {
+    const result = await this.stripeService.getShippingMethods();
     res.send({ result });
   }
 }

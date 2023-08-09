@@ -16,15 +16,22 @@ export class StripeService {
     }
 
     createSession = async (body) => {
-        return await this.stripe.checkout.sessions.create({
-            success_url: `${this.configService.get<string>('FRONTEND_URL')}/sukces`,
-            cancel_url: `${this.configService.get<string>('FRONTEND_URL')}/anulowano`,
-            line_items: [
-                {price: 'price_1NaLE7GT9eLSyBCCrbvTi6Xg', quantity: 2},
-            ],
-            mode: 'payment',
-            customer: 'cus_OPLrgVqWakf5Zd'
-        })
+        const {
+            success_url,
+            cancel_url
+        } = body;
+
+        const checkoutPayload = {
+            ...body
+        };
+
+        checkoutPayload.success_url = `${this.configService.get<string>('FRONTEND_URL')}/${success_url}`
+        checkoutPayload.cancel_url = `${this.configService.get<string>('FRONTEND_URL')}/${cancel_url}`
+
+        // if (isVat) checkoutPayload.invoice_creation = {};
+
+        console.log(checkoutPayload);
+        return await this.stripe.checkout.sessions.create(checkoutPayload)
     };
 
     createCustomer = async (body) => {
@@ -33,4 +40,8 @@ export class StripeService {
             email: body.email,
         })
     };
+
+    getShippingMethods = async () => {
+        return this.stripe.shippingRates.list()
+    }
 }
