@@ -1,28 +1,32 @@
 import {Injectable} from '@nestjs/common';
-import {concatMap, defer, EMPTY, from, map, Observable, switchMap, tap} from "rxjs";
+import {map, Observable, switchMap} from "rxjs";
 import {StrapiApiHttpService} from "../core/api/strapi-api/strapi-api-http.service";
 import routes from "../routes";
 import {UserInterface} from "./models/user.interface";
 import {AxiosResponse} from 'axios';
 import {StripeService} from "../stripe/stripe.service";
+import {ForgotPasswordInterface} from "./models/forgot-password.interface";
+import {RegisterInterface} from "./models/register.interface";
+import {UpdateInterface} from "./models/update.interface";
+import {LoginInterface} from "./models/login.interface";
 
 @Injectable()
 export class UserService {
     constructor(private strapiApiHttpService: StrapiApiHttpService, private stripeService: StripeService) {
     }
 
-    login(data): Observable<AxiosResponse<UserInterface>> {
+    login(data: LoginInterface): Observable<AxiosResponse<UserInterface>> {
         return this.strapiApiHttpService
             .post<UserInterface>(routes.strapiApi.login, data);
     };
 
-    update(userId: number | string, data): Observable<AxiosResponse<UserInterface>> {
+    update(userId: number | string, data: UpdateInterface): Observable<AxiosResponse<UserInterface>> {
         return this.strapiApiHttpService
             //@ts-ignore
             .put<UserInterface>(routes.strapiApi.update.replace("{id}", userId), data);
     }
 
-    register(data): Observable<AxiosResponse<UserInterface>> {
+    register(data: RegisterInterface): Observable<AxiosResponse<UserInterface>> {
         return this.strapiApiHttpService
             .post<UserInterface>(routes.strapiApi.register, data)
             .pipe(
@@ -34,6 +38,11 @@ export class UserService {
                     return this.update(user.data.user.id, {stripeId: user.stripeId}).pipe(map(() => user))
                 }),
             );
+    };
+
+    forgotPassword(data: ForgotPasswordInterface): Observable<AxiosResponse<UserInterface>> {
+        return this.strapiApiHttpService
+            .post<UserInterface>(routes.strapiApi.forgotPassword, data);
     };
 }
 

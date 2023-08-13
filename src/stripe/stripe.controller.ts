@@ -15,7 +15,7 @@ export class StripeController {
   constructor(private stripeService: StripeService) {}
 
   @Post('/create-session')
-  async createAction(@Body() body: any, @Res() res: Response) {
+  async createAction(@Body() body, @Res() res: Response) {
     const result = await this.stripeService.createSession(body);
     res.send({ result });
   }

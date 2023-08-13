@@ -1,8 +1,4 @@
-import {
-    Body,
-    Controller, Get, Param, Post, Put, Res,
-    UseGuards,
-} from '@nestjs/common';
+import {Body, Controller, Param, Post, Put, Res, UseGuards,} from '@nestjs/common';
 import {UserService} from './user.service';
 import {ApiKeyAuthGuard} from '../core/auth/guard/apiKeyAuth.guard';
 import {Response} from "express";
@@ -11,6 +7,7 @@ import catchAxiosError from "../core/helpers/catchAxiosError";
 import {LoginDto} from "./models/login.dto";
 import throwAxiosData from "../core/helpers/throwAxiosData";
 import {RegisterDto} from "./models/register.dto";
+import {UpdateDto} from "./models/update.dto";
 
 @UseGuards(ApiKeyAuthGuard)
 @Controller('user')
@@ -39,7 +36,7 @@ export class UserController {
     }
 
     @Put('/:id')
-    update(@Body() body: any, @Param('id') id: string, @Res() res: Response) {
+    update(@Body() body: UpdateDto, @Param('id') id: string, @Res() res: Response) {
         this.userService.update(id, body)
             .pipe(
                 tap((data) => throwAxiosData(data, res)),

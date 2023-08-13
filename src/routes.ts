@@ -4,6 +4,7 @@ export default {
         "register": "api/auth/local/register",
         "login": "api/auth/local",
         "update": "api/users/{id}",
-        "changePassword": "api/auth/change-password"
+        "changePassword": "api/auth/change-password",
+        "forgotPassword": "api/auth/forgot-password"
     }
 }

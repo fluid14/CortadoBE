@@ -1,6 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import Stripe from "stripe";
 import {ConfigService} from "@nestjs/config";
+import {CustomerInterface} from "./models/customer.interface";
 
 @Injectable()
 export class StripeService {
@@ -31,7 +32,7 @@ export class StripeService {
         return await this.stripe.checkout.sessions.create(checkoutPayload)
     };
 
-    createCustomer = async (body) => {
+    createCustomer = async (body: CustomerInterface) => {
         return await this.stripe.customers.create({
             name: `${body.name} ${body.surname}`,
             email: body.email,
