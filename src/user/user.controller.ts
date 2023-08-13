@@ -8,6 +8,7 @@ import {LoginDto} from "./models/login.dto";
 import throwAxiosData from "../core/helpers/throwAxiosData";
 import {RegisterDto} from "./models/register.dto";
 import {UpdateDto} from "./models/update.dto";
+import {ForgotPasswordDto} from "./models/forgot-password.dto";
 
 @UseGuards(ApiKeyAuthGuard)
 @Controller('user')
@@ -38,6 +39,16 @@ export class UserController {
     @Put('/:id')
     update(@Body() body: UpdateDto, @Param('id') id: string, @Res() res: Response) {
         this.userService.update(id, body)
+            .pipe(
+                tap((data) => throwAxiosData(data, res)),
+                catchError(err => catchAxiosError(err, res))
+            )
+            .subscribe();
+    }
+
+    @Post('/forgot-password')
+    forgotPassword(@Body() body: ForgotPasswordDto, @Res() res: Response) {
+        this.userService.forgotPassword(body)
             .pipe(
                 tap((data) => throwAxiosData(data, res)),
                 catchError(err => catchAxiosError(err, res))
