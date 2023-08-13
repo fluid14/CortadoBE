@@ -5,6 +5,7 @@ export default {
         "login": "api/auth/local",
         "update": "api/users/{id}",
         "changePassword": "api/auth/change-password",
-        "forgotPassword": "api/auth/forgot-password"
+        "forgotPassword": "api/auth/forgot-password",
+        "resetPassword": "api/auth/reset-password"
     }
 }

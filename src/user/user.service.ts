@@ -9,6 +9,7 @@ import {ForgotPasswordInterface} from "./models/forgot-password.interface";
 import {RegisterInterface} from "./models/register.interface";
 import {UpdateInterface} from "./models/update.interface";
 import {LoginInterface} from "./models/login.interface";
+import {ResetPasswordInterface} from "./models/reset-password.interface";
 
 @Injectable()
 export class UserService {
@@ -43,6 +44,11 @@ export class UserService {
     forgotPassword(data: ForgotPasswordInterface): Observable<AxiosResponse<UserInterface>> {
         return this.strapiApiHttpService
             .post<UserInterface>(routes.strapiApi.forgotPassword, data);
+    };
+
+    resetPassword(data: ResetPasswordInterface): Observable<AxiosResponse<UserInterface>> {
+        return this.strapiApiHttpService
+            .post<UserInterface>(routes.strapiApi.resetPassword, data);
     };
 }
 
