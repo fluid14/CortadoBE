@@ -4,4 +4,5 @@ export interface UpdateInterface {
     name?: string;
     surname?: string;
     stripeId?: string;
+    orders?: string[];
 }

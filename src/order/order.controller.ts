@@ -8,9 +8,8 @@ export class OrderController {
     }
 
     @Post('/update')
-    createOrder(@Body() body, @Res() res: Response) {
-        console.log(body)
-        // this.orderService.createOrder(body)
+    updateOrder(@Body() body, @Res() res: Response) {
+        this.orderService.updateOrder(body)
         res.status(200);
         res.send({message: 'Order updated'})
     }
