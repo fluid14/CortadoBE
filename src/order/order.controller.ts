@@ -1,17 +1,25 @@
-import {Body, Controller, Post, Res, UseGuards,} from '@nestjs/common';
-import {OrderService} from './order.service';
+import { Controller, Get, Param, Res, UseGuards,} from '@nestjs/common';
+import {ApiKeyAuthGuard} from '../core/auth/guard/apiKeyAuth.guard';
 import {Response} from "express";
+import {catchError, tap} from "rxjs";
+import catchAxiosError from "../core/helpers/catchAxiosError";
+import throwAxiosData from "../core/helpers/throwAxiosData";
+import {OrderService} from "./order.service";
 
+@UseGuards(ApiKeyAuthGuard)
 @Controller('order')
 export class OrderController {
-    constructor(private orderService: OrderService) {
+    constructor(private readonly orderService: OrderService) {
     }
 
-    @Post('/update')
-    updateOrder(@Body() body, @Res() res: Response) {
-        this.orderService.updateOrder(body)
-        res.status(200);
-        res.send({message: 'Order updated'})
+    @Get('/:id')
+    get(@Param('id') id: string, @Res() res: Response) {
+        this.orderService.getOrder(parseInt(id))
+            .pipe(
+                tap((data) => throwAxiosData(data, res)),
+                catchError(err => catchAxiosError(err, res))
+            )
+            .subscribe();
     }
 }
 

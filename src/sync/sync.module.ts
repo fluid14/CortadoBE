@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
+import { SyncController } from './order.controller';
 import { OrderService } from './order.service';
-import { OrderController } from './order.controller';
+import {HttpModule} from "@nestjs/axios";
 import {StrapiApiModule} from "../core/api/strapi-api/strapi-api.module";
 
 @Module({
-  imports: [StrapiApiModule],
+  imports: [HttpModule, StrapiApiModule],
+  controllers: [SyncController],
   providers: [OrderService],
-  controllers: [OrderController]
 })
 export class OrderModule {}
