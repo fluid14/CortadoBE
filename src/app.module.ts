@@ -9,7 +9,8 @@ import {APP_FILTER} from "@nestjs/core";
 import {HttpExceptionFilter} from "./core/http-exception.filter";
 import {HttpModule} from "@nestjs/axios";
 import {StrapiApiModule} from "./core/api/strapi-api/strapi-api.module";
-import {OrderModule} from "./order/order.module";
+import {SyncModule} from "./sync/sync.module";
+import { OrderModule } from './order/order.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import {OrderModule} from "./order/order.module";
         StripeModule,
         AuthModule,
         UserModule,
+        SyncModule,
         OrderModule
     ],
     controllers: [AppController],

@@ -6,7 +6,7 @@ import throwAxiosData from "../core/helpers/throwAxiosData";
 import catchAxiosError from "../core/helpers/catchAxiosError";
 
 @Injectable()
-export class OrderService {
+export class SyncService {
     constructor(private strapiApiHttpService: StrapiApiHttpService) {
     }
 
@@ -16,7 +16,7 @@ export class OrderService {
                 this.strapiApiHttpService.get(routes.strapiApi.order.get + `?filters[stripeSessionId][$eq]=${data.data.object.id}`)
                     .pipe(
                         tap((data) => throwAxiosData(data)),
-                        switchMap(data => this.strapiApiHttpService.put(routes.strapiApi.order.update.replace('{id}', data.data.data[0].id), JSON.stringify({data: {payment: 'failed', status: 'failed'}}))),
+                        switchMap(data => this.strapiApiHttpService.put(routes.strapiApi.order.single.replace('{id}', data.data.data[0].id), JSON.stringify({data: {payment: 'failed', status: 'failed'}}))),
                         catchError(err => catchAxiosError(err))
                     )
                     .subscribe()
@@ -25,7 +25,7 @@ export class OrderService {
                 this.strapiApiHttpService.get(routes.strapiApi.order.get + `?filters[stripeSessionId][$eq]=${data.data.object.id}`)
                     .pipe(
                         tap((data) => throwAxiosData(data)),
-                        switchMap(data => this.strapiApiHttpService.put(routes.strapiApi.order.update.replace('{id}', data.data.data[0].id), JSON.stringify({data: {payment: 'complete', status: 'complete'}}))),
+                        switchMap(data => this.strapiApiHttpService.put(routes.strapiApi.order.single.replace('{id}', data.data.data[0].id), JSON.stringify({data: {payment: 'complete', status: 'complete'}}))),
                         catchError(err => catchAxiosError(err))
                     )
                     .subscribe()

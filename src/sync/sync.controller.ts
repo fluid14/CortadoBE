@@ -1,13 +1,13 @@
-import {Body, Controller, Post, Res, UseGuards,} from '@nestjs/common';
-import {OrderService} from './order.service';
+import {Body, Controller, Post, Res} from '@nestjs/common';
+import {SyncService} from './sync.service';
 import {Response} from "express";
 
-@Controller('order')
-export class OrderController {
-    constructor(private orderService: OrderService) {
+@Controller('sync')
+export class SyncController {
+    constructor(private orderService: SyncService) {
     }
 
-    @Post('/update')
+    @Post('/order')
     updateOrder(@Body() body, @Res() res: Response) {
         this.orderService.updateOrder(body)
         res.status(200);

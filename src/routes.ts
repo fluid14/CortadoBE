@@ -11,7 +11,7 @@ export default {
         "order": {
             "get": "api/orders",
             "create": "api/orders",
-            "update": "api/orders/{id}",
+            "single": "api/orders/{id}?populate=*",
         }
     }
 }

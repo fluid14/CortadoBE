@@ -1,4 +1,4 @@
-import {Body, Controller, Param, Post, Put, Res, UseGuards,} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Put, Res, UseGuards,} from '@nestjs/common';
 import {UserService} from './user.service';
 import {ApiKeyAuthGuard} from '../core/auth/guard/apiKeyAuth.guard';
 import {Response} from "express";
@@ -17,6 +17,26 @@ export class UserController {
     constructor(private userService: UserService) {
     }
 
+    @Get('/:id')
+    get(@Param('id') id: string, @Res() res: Response) {
+        this.userService.getUser(parseInt(id))
+            .pipe(
+                tap((data) => throwAxiosData(data, res)),
+                catchError(err => catchAxiosError(err, res))
+            )
+            .subscribe();
+    }
+
+    @Put('/:id')
+    update(@Body() body: UpdateDto, @Param('id') id: string, @Res() res: Response) {
+        this.userService.update(id, body)
+            .pipe(
+                tap((data) => throwAxiosData(data, res)),
+                catchError(err => catchAxiosError(err, res))
+            )
+            .subscribe();
+    }
+
     @Post('/login')
     login(@Body() body: LoginDto, @Res() res: Response) {
         this.userService.login(body)
@@ -30,16 +50,6 @@ export class UserController {
     @Post('/register')
     register(@Body() body: RegisterDto, @Res() res: Response) {
         this.userService.register(body)
-            .pipe(
-                tap((data) => throwAxiosData(data, res)),
-                catchError(err => catchAxiosError(err, res))
-            )
-            .subscribe();
-    }
-
-    @Put('/:id')
-    update(@Body() body: UpdateDto, @Param('id') id: string, @Res() res: Response) {
-        this.userService.update(id, body)
             .pipe(
                 tap((data) => throwAxiosData(data, res)),
                 catchError(err => catchAxiosError(err, res))
