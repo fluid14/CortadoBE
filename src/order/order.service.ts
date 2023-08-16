@@ -17,6 +17,6 @@ export class OrderService {
 
     cancelOrder(id: number): Observable<AxiosResponse<any>> {
         return this.strapiApiHttpService
-            .put<GetUserInterface>(routes.strapiApi.order.single.replace("{id}", id.toString()), {status: 'canceled'});
+            .put<GetUserInterface>(routes.strapiApi.order.single.replace("{id}", id.toString()), {data: {status: 'canceled'}});
     };
 }
