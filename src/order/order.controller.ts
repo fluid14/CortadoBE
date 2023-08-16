@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Res, UseGuards,} from '@nestjs/common';
+import {Controller, Get, Param, Put, Res, UseGuards,} from '@nestjs/common';
 import {ApiKeyAuthGuard} from '../core/auth/guard/apiKeyAuth.guard';
 import {Response} from "express";
 import {catchError, tap} from "rxjs";
@@ -15,6 +15,16 @@ export class OrderController {
     @Get('/:id')
     get(@Param('id') id: string, @Res() res: Response) {
         this.orderService.getOrder(parseInt(id))
+            .pipe(
+                tap((data) => throwAxiosData(data, res)),
+                catchError(err => catchAxiosError(err, res))
+            )
+            .subscribe();
+    }
+
+    @Put('/:id')
+    cancel(@Param('id') id: string, @Res() res: Response) {
+        this.orderService.cancelOrder(parseInt(id))
             .pipe(
                 tap((data) => throwAxiosData(data, res)),
                 catchError(err => catchAxiosError(err, res))
