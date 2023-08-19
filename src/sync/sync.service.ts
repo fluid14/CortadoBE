@@ -17,16 +17,7 @@ export class SyncService {
                 this.strapiApiHttpService.get(url)
                     .pipe(
                         tap((data) => throwAxiosData(data)),
-                        switchMap(data => this.strapiApiHttpService.put(routes.strapiApi.order.single.replace('{id}', data.data.data[0].id), JSON.stringify({data: {payment: 'failed', status: 'failed'}}))),
-                        catchError(err => catchAxiosError(err))
-                    )
-                    .subscribe()
-                break;
-            case 'payment_intent.succeeded':
-                this.strapiApiHttpService.get(url)
-                    .pipe(
-                        tap((data) => throwAxiosData(data)),
-                        switchMap(data => this.strapiApiHttpService.put(routes.strapiApi.order.single.replace('{id}', data.data.data[0].id), JSON.stringify({data: {payment: 'complete'}}))),
+                        switchMap(data => this.strapiApiHttpService.put(routes.strapiApi.order.single.replace('{id}', data.data.data[0].id), JSON.stringify({data: { status: 'failed'}}))),
                         catchError(err => catchAxiosError(err))
                     )
                     .subscribe()
