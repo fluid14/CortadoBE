@@ -11,9 +11,10 @@ export class SyncService {
     }
 
     updateOrder(data: any) {
+        const url = routes.strapiApi.order.get + `?filters[stripeSessionId][$eq]=${data.data.object.id}`;
         switch (data.type) {
-            case 'checkout.session.async_payment_failed':
-                this.strapiApiHttpService.get(routes.strapiApi.order.get + `?filters[stripeSessionId][$eq]=${data.data.object.id}`)
+            case 'payment_intent.payment_failed':
+                this.strapiApiHttpService.get(url)
                     .pipe(
                         tap((data) => throwAxiosData(data)),
                         switchMap(data => this.strapiApiHttpService.put(routes.strapiApi.order.single.replace('{id}', data.data.data[0].id), JSON.stringify({data: {payment: 'failed', status: 'failed'}}))),
@@ -21,11 +22,20 @@ export class SyncService {
                     )
                     .subscribe()
                 break;
-            case 'checkout.session.async_payment_succeeded':
-                this.strapiApiHttpService.get(routes.strapiApi.order.get + `?filters[stripeSessionId][$eq]=${data.data.object.id}`)
+            case 'payment_intent.succeeded':
+                this.strapiApiHttpService.get(url)
                     .pipe(
                         tap((data) => throwAxiosData(data)),
-                        switchMap(data => this.strapiApiHttpService.put(routes.strapiApi.order.single.replace('{id}', data.data.data[0].id), JSON.stringify({data: {payment: 'complete', status: 'complete'}}))),
+                        switchMap(data => this.strapiApiHttpService.put(routes.strapiApi.order.single.replace('{id}', data.data.data[0].id), JSON.stringify({data: {payment: 'complete'}}))),
+                        catchError(err => catchAxiosError(err))
+                    )
+                    .subscribe()
+                break;
+            case 'checkout.session.completed':
+                this.strapiApiHttpService.get(url)
+                    .pipe(
+                        tap((data) => throwAxiosData(data)),
+                        switchMap(data => this.strapiApiHttpService.put(routes.strapiApi.order.single.replace('{id}', data.data.data[0].id), JSON.stringify({data: {status: 'complete'}}))),
                         catchError(err => catchAxiosError(err))
                     )
                     .subscribe()
