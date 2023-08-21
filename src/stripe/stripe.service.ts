@@ -40,6 +40,7 @@ export class StripeService {
 
         checkoutPayload.success_url = `${this.configService.get<string>('FRONTEND_URL')}/${success_url}`;
         checkoutPayload.cancel_url = `${this.configService.get<string>('FRONTEND_URL')}/${cancel_url}`;
+        if(checkoutPayload.customer === '' || !checkoutPayload.customer) delete checkoutPayload.customer;
         delete checkoutPayload.user;
         delete checkoutPayload.products;
         delete checkoutPayload.shipping;

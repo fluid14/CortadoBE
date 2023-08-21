@@ -55,10 +55,13 @@ export class UserService {
             .post<UserInterface>(routes.strapiApi.register, data)
             .pipe(
                 switchMap(async user => {
+                    console.log(user)
                     const result = await this.createCustomer(data)
+                    console.log(result)
                     return {stripeId: result.id, ...user}
                 }),
                 switchMap(user => {
+                    console.log(user)
                     return this.update(user.data.user.id, {stripeId: user.stripeId}).pipe(map(() => user))
                 }),
             );
