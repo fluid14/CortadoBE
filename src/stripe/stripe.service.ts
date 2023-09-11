@@ -31,7 +31,8 @@ export class StripeService {
             cancel_url,
             user,
             products,
-            shipping
+            shipping,
+            status
         } = body;
 
         const checkoutPayload = {
@@ -44,6 +45,7 @@ export class StripeService {
         delete checkoutPayload.user;
         delete checkoutPayload.products;
         delete checkoutPayload.shipping;
+        delete checkoutPayload.status;
 
         const session = await this.stripe.checkout.sessions.create(checkoutPayload);
 
@@ -56,7 +58,8 @@ export class StripeService {
             startDate: body.payment_intent_data.metadata.subscriptionStartDate,
             products,
             user,
-            shipping
+            shipping,
+            status
         }
 
         this.strapiApiHttpService
